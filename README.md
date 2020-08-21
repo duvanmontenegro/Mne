@@ -3,7 +3,7 @@ Códigos de mne para archivos bdf
 ### Pre-requisitos 📋
 _https://www.anaconda.com/products/individual_
 ## Instalación 🔧
-**Comandos importantes (Nos crea un entorno en conda con todo lo necesario): **
+**Comandos importantes (Nos crea un entorno en conda con todo lo necesario):**
 https://mne.tools/dev/install/contributing.html
 ```
 curl --remote-name https://raw.githubusercontent.com/mne-tools/mne-python/master/environment.yml
@@ -17,7 +17,7 @@ pip install mne
 conda activate mnedev
 ```
 ## Código funcional de pruebas:
-**Este código fue tomado de la página:** _https://mne.tools/stable/auto_tutorials/intro/plot_10_overview.html#sphx-glr-auto-tutorials-intro-plot-10-overview-py y se realizan modificaciones para trabajar con el dataset “DEAP”_
+**Este código fue tomado de la página:** _https://mne.tools/stable/auto_tutorials/intro/plot_10_overview.html#sphx-glr-auto-tutorials-intro-plot-10-overview-py_ y se realizan modificaciones para trabajar con el dataset “DEAP”
  
 _**Comenzamos importando los módulos Python necesarios:**_
 ```
