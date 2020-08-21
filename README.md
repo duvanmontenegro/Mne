@@ -8,20 +8,24 @@ pip install PySurfer
 pip install mne --upgrade
 ```
 _#Si no funciona agregar:_
-_$ pip install mne_
-$ pip install -U scikit-learn
+```
+pip install mne
+pip install -U scikit-learn
+```
 **Instalación sencilla pero más pesada, tomada de la guía mne:** https://mne.tools/dev/install/contributing.html
 Comandos importantes (Nos crea un entorno en conda con todo lo necesario):
-$ curl --remote-name https://raw.githubusercontent.com/mne-tools/mne-python/master/environment.yml
-$ conda env create --file environment.yml --name mnedev
-$ conda activate mnedev
-Si este nuevo entorno no funciona corremos estas dos líneas:
-$ pip uninstall -y mne
-$ pip install mne
-$ conda activate mnedev
-Repositorio:
-https://github.com/duvanmontenegro/mne
-Código funcional de pruebas:
+```
+curl --remote-name https://raw.githubusercontent.com/mne-tools/mne-python/master/environment.yml
+conda env create --file environment.yml --name mnedev
+conda activate mnedev
+```
+_Si este nuevo entorno no funciona corremos estas dos líneas:_
+```
+pip uninstall -y mne
+pip install mne
+conda activate mnedev
+```
+## Código funcional de pruebas:
 Este código fue tomado de la página: https://mne.tools/stable/auto_tutorials/intro/plot_10_overview.html#sphx-glr-auto-tutorials-intro-plot-10-overview-py y se realizan modificaciones para trabajar con el dataset “DEAP”
  
 Comenzamos importando los módulos Python necesarios:
