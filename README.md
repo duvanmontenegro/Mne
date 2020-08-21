@@ -17,7 +17,7 @@ pip install mne
 conda activate mnedev
 ```
 ## Código funcional de pruebas:
-**Este código fue tomado de la página: https://mne.tools/stable/auto_tutorials/intro/plot_10_overview.html#sphx-glr-auto-tutorials-intro-plot-10-overview-py y se realizan modificaciones para trabajar con el dataset “DEAP”**
+**Este código fue tomado de la página:** _https://mne.tools/stable/auto_tutorials/intro/plot_10_overview.html#sphx-glr-auto-tutorials-intro-plot-10-overview-py y se realizan modificaciones para trabajar con el dataset “DEAP”_
  
 _**Comenzamos importando los módulos Python necesarios:**_
 ```
