@@ -1,18 +1,7 @@
 # Mne
 Códigos de mne para archivos bdf 
 ## Instalación
-**Instalación rápida y sencilla, pero poco funcional.**
-```
-conda install scipy matplotlib scikit-learn mayavi ipython-notebook
-pip install PySurfer
-pip install mne --upgrade
-```
-_#Si no funciona agregar:_
-```
-pip install mne
-pip install -U scikit-learn
-```
-**Instalación sencilla pero más pesada, tomada de la guía mne:** https://mne.tools/dev/install/contributing.html
+https://mne.tools/dev/install/contributing.html
 Comandos importantes (Nos crea un entorno en conda con todo lo necesario):
 ```
 curl --remote-name https://raw.githubusercontent.com/mne-tools/mne-python/master/environment.yml
