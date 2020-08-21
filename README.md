@@ -1,6 +1,8 @@
 # Mne
 Códigos de mne para archivos bdf 
-## Instalación
+### Pre-requisitos 📋
+_https://www.anaconda.com/products/individual_
+## Instalación 🔧
 **Comandos importantes (Nos crea un entorno en conda con todo lo necesario): **
 https://mne.tools/dev/install/contributing.html
 ```
@@ -84,18 +86,23 @@ fig = raw_highpass.plot(order=mag_channels, proj=False,n_channels=len(mag_channe
 fig.subplots_adjust(top=0.9)#opcional
 fig.suptitle('High-pass filtered at {} Hz'.format(3), size='xx-large',weight='bold')
 ```
-Para crear o utilizar los diferentes tipos de filtros solo tenemos que tener en cuenta que: l_freqy h_freqson las frecuencias por debajo y por encima de las cuales, respectivamente, filtrar los datos. Así los usos son:
-l_freq < h_freq: filtro de paso de banda
-l_freq > h_freq: filtro de parada de banda
-l_freq no es None y h_freq es None: filtro de paso alto
-l_freq es None y h_freq no es None: filtro de paso bajo
+**Para crear o utilizar los diferentes tipos de filtros solo tenemos que tener en cuenta que: l_freqy h_freqson las frecuencias por debajo y por encima de las cuales, respectivamente, filtrar los datos. Así los usos son:**
+* l_freq < h_freq: filtro de paso de banda
+* l_freq > h_freq: filtro de parada de banda
+* l_freq no es None y h_freq es None: filtro de paso alto
+* l_freq es None y h_freq no es None: filtro de paso bajo
+```
 raw_highpass = raw.copy().filter(l_freq=1, h_freq=50) # filtro pasa bandas
-“usando la energía del filtro FIR (Finite Impulso response) elíptico para obtener precisiones de clasificación hasta el 97.5%”
-Para crear un filtro FIR o IIR, utilizamos “mne.filter.create_filter”, ejemplo: 
+```
+**“usando la energía del filtro FIR (Finite Impulso response) elíptico para obtener precisiones de clasificación hasta el 97.5%”
+Para crear un filtro FIR o IIR, utilizamos “mne.filter.create_filter”, ejemplo:**
+```
 filter_params = mne.filter.create_filter(raw.get_data(), raw.info['sfreq'],l_freq=1, h_freq=50)
-https://mne.tools/stable/generated/mne.filter.create_filter.html#mne.filter.create_filter
+```
+_https://mne.tools/stable/generated/mne.filter.create_filter.html#mne.filter.create_filter_
 
-Obtener la potencia espectral en el espacio de la frecuencia para el ruido:
+**_Obtener la potencia espectral en el espacio de la frecuencia para el ruido:_**
+```
 def add_arrows(axes):
 	for ax in axes: # Este for es para magnetómetros, gradiómetros y EEG
 		freqs = ax.lines[-1].get_xdata()
@@ -106,19 +113,25 @@ def add_arrows(axes):
 ax.arrow(x=freqs[idx], y=y + 18, dx=0, dy=-12, color='red',width=0.1, head_width=3, length_includes_head=True)
 fig = raw.plot_psd(fmax=250, average=True)
 add_arrows(fig.axes[:2])
-Para obtener los datos usamos get_data y usado sin parámetros especificados, extraerá todos los datos de todos los canales, en un (n_channels, n_timepoints).
+```
+**_Para obtener los datos usamos get_data y usado sin parámetros especificados, extraerá todos los datos de todos los canales, en un (n_channels, n_timepoints)._**
+```
 print(raw.get_data())
-Si desea la matriz de tiempos
+```
+_Si desea la matriz de tiempos_
+```
 data, times = raw.get_data(return_times=True)
 print(data.shape)
 print(times.shape)
-Para el canal (s) extracto específico y los rangos de la muestra
+```
+_Para el canal (s) extracto específico y los rangos de la muestra_
+```
 first_channel_data = raw.get_data(picks=0)
 eeg_and_eog_data = raw.get_data(picks=['eeg', 'eog'])
 two_meg_chans_data = raw.get_data(picks=['AF3', 'F7'],start=1000, stop=2000)
+```
 
-
-Técnicas de extracción de características de señales EEG en la imaginación de movimiento para sistemas BCI
+## [Técnicas de extracción de características de señales EEG en la imaginación de movimiento para sistemas BCI](https://www.revistaespacios.com/a18v39n22/a18v39n22p36.pdf)
 Dada la modesta velocidad y precisión de un BCI basado en EEG, se hace necesario el uso tanto de sistemas multicanal como de métodos adecuados de procesado de señal. El procesado de la señal EEG se divide en varias etapas: pre-procesamiento, extracción de características, selección y clasificación de las mismas.
-Técnicas de extracción utilizadas: Técnicas en el dominio del tiempo, Técnicas en dominio de la frecuencia (PSD - Power Spectral Density), 
-https://www.revistaespacios.com/a18v39n22/a18v39n22p36.pdf
+**Técnicas de extracción utilizadas: Técnicas en el dominio del tiempo, Técnicas en dominio de la frecuencia (PSD - Power Spectral Density)**
+
