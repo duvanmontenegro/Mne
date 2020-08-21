@@ -131,7 +131,8 @@ eeg_and_eog_data = raw.get_data(picks=['eeg', 'eog'])
 two_meg_chans_data = raw.get_data(picks=['AF3', 'F7'],start=1000, stop=2000)
 ```
 
-## [Técnicas de extracción de características de señales EEG en la imaginación de movimiento para sistemas BCI](https://www.revistaespacios.com/a18v39n22/a18v39n22p36.pdf)
+## Para una mayor comprensión sobre los filtros, ir al siguiente artículo:
+**[Técnicas de extracción de características de señales EEG en la imaginación de movimiento para sistemas BCI](https://www.revistaespacios.com/a18v39n22/a18v39n22p36.pdf)
 Dada la modesta velocidad y precisión de un BCI basado en EEG, se hace necesario el uso tanto de sistemas multicanal como de métodos adecuados de procesado de señal. El procesado de la señal EEG se divide en varias etapas: pre-procesamiento, extracción de características, selección y clasificación de las mismas.
 **Técnicas de extracción utilizadas: Técnicas en el dominio del tiempo, Técnicas en dominio de la frecuencia (PSD - Power Spectral Density)**
 
