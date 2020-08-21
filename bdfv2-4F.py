@@ -5,10 +5,13 @@ import matplotlib.pyplot as plt
 import mne
 
 
-raw = mne.io.read_raw_bdf("s01.bdf", preload=True)
+raw = mne.io.read_raw_bdf("../s01.bdf", preload=True)
 # raw = mne.io.read_raw_bdf("OpenBCI-BDF-2019-02-16_19-50-38.bdf", preload=True)
 print(raw.info)
 print(raw.info['sfreq'])
+print(raw.get_data())
+data = raw.get_data()
+print(data.shape)
 #solo mostramos 60s para ahorrar memoria
 raw.crop(0, 60).load_data() 
 
@@ -16,18 +19,43 @@ raw.crop(0, 60).load_data()
 mag_channels = mne.pick_types(raw.info, meg='mag', eeg=True)
 # raw.plot(duration=60, order=mag_channels, proj=False,n_channels=len(mag_channels), remove_dc=False)
 raw.plot(order=mag_channels, proj=False,n_channels=len(mag_channels), remove_dc=False)
-raw.plot_psd(fmax=120);
+# raw.plot_psd(fmax=120);
 # raw.plot_psd(fmax=100);
 
 # paso alto
-for cutoff in (0.1, 0.2):
-	raw_highpass = raw.copy().filter(l_freq=cutoff, h_freq=None)
-	# fig = raw_highpass.plot(duration=60, order=mag_channels, proj=False,n_channels=len(mag_channels), remove_dc=False)
-	fig = raw_highpass.plot(order=mag_channels, proj=False,n_channels=len(mag_channels), remove_dc=False)
-	fig.subplots_adjust(top=0.9)#opcional
-	fig.suptitle('High-pass filtered at {} Hz'.format(cutoff), size='xx-large',weight='bold')
-	raw_highpass.plot_psd(fmax=120);
-	# raw_highpass.plot_psd(fmax=100);
+# for cutoff in (0.1, 0.2):
+# 	raw_highpass = raw.copy().filter(l_freq=cutoff, h_freq=None)
+# 	# fig = raw_highpass.plot(duration=60, order=mag_channels, proj=False,n_channels=len(mag_channels), remove_dc=False)
+# 	fig = raw_highpass.plot(order=mag_channels, proj=False,n_channels=len(mag_channels), remove_dc=False)
+# 	fig.subplots_adjust(top=0.9)#opcional
+# 	fig.suptitle('High-pass filtered at {} Hz'.format(cutoff), size='xx-large',weight='bold')
+# 	raw_highpass.plot_psd(fmax=120);
+# 	# raw_highpass.plot_psd(fmax=100);
+# raw_highpass = raw.copy().filter(l_freq=1, h_freq=50)
+raw_highpass = raw.copy().filter(l_freq=3, h_freq=None)
+fig = raw_highpass.plot(order=mag_channels, proj=False,n_channels=len(mag_channels), remove_dc=False)
+fig.subplots_adjust(top=0.9)#opcional
+fig.suptitle('High-pass filtered at {} Hz'.format(3), size='xx-large',weight='bold')
+# raw_highpass.plot_psd(fmax=120);
+print("los datos sin filtro")
+data = raw.get_data()
+print(data.shape)
+
+data, times = raw.get_data(return_times=True)
+print(data.shape)
+print(times.shape)
+
+first_channel_data = raw.get_data(picks=0)
+eeg_and_eog_data = raw.get_data(picks=['eeg', 'eog'])
+two_meg_chans_data = raw.get_data(picks=['AF3', 'F7'],start=1000, stop=2000)
+
+print(first_channel_data.shape)
+print(eeg_and_eog_data.shape)
+print(two_meg_chans_data.shape)
+
+print("los datos con filtro")
+print(raw_highpass.get_data())
+
 # Si 0.1 Hz no fue lo suficientemente alto como para eliminar por completo las derivas lentas.
 filter_params = mne.filter.create_filter(raw.get_data(), raw.info['sfreq'],l_freq=0.2, h_freq=None)
 
@@ -74,7 +102,7 @@ for data, title in zip([raw, raw_downsampled], ['Original', 'Downsampled']):
 print("Mejores prácticas")
 
 current_sfreq = raw.info['sfreq']
-desired_sfreq = 128 # Hz
+desired_sfreq = 56.888888888888886 # Hz
 decim = np.round(current_sfreq / desired_sfreq).astype(int)
 obtained_sfreq = current_sfreq / decim
 lowpass_freq = obtained_sfreq / 3.

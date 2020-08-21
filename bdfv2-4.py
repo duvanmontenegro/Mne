@@ -6,7 +6,7 @@ import mne
 # from mne.datasets import sample
 
 #Carga
-raw = mne.io.read_raw_bdf("s01.bdf", preload=True)
+raw = mne.io.read_raw_bdf("../s01.bdf", preload=True)
 
 #Consulta informacion
 print(raw)
@@ -30,12 +30,12 @@ print(mne.channel_type(raw.info, 0))
 # raw.plot(start=12, duration=4,title="Plot Uno");
 raw.plot(block=True);
 #Imprimir PSD de señal original
-raw.plot_psd(fmax=120);
+# raw.plot_psd(fmax=120);
 
 #Imprimir graficas de señales filtradas por tipo
 seeg=mne.pick_types(raw.info, meg=False, eeg=True, exclude=[])
 raw.plot(order=seeg, start=12, duration=4,title="Plot dos");
-raw.plot_psd(fmax=120);
+# raw.plot_psd(fmax=120);
 
 
 

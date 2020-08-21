@@ -9,7 +9,8 @@ class BdfA(object):
 		self.iniciar()
 	def iniciar(self):
 		print("Iniciar")
-		self.raw = mne.io.read_raw_bdf(self.url, preload=True)
+		# self.raw = mne.io.read_raw_bdf(self.url, preload=True)
+		self.raw = mne.io.read_raw_fif(self.url)
 		self.raw.crop(0, 60).load_data()
 		# print("Canales1: ",self.raw.ch_names)
 	def infor(self):
@@ -65,11 +66,13 @@ class BdfA(object):
 		self.raw.plot(start=12, duration=4,title="Plot Uno");
 		# raw.plot(block=True);
 		#Imprimir PSD de señal original
-		self.raw.plot_psd(fmax=120);
+		# self.raw.plot_psd(fmax=120);
+		self.raw.plot_psd(fmax=50);
 		#Imprimir graficas de señales filtradas por tipo
 		seeg=mne.pick_types(self.raw.info, meg=False, eeg=True, exclude=[])
 		self.raw.plot(order=seeg, start=12, duration=4,title="Plot dos");
-		self.raw.plot_psd(fmax=120);
+		# self.raw.plot_psd(fmax=120);
+		self.raw.plot_psd(fmax=50);
 	def preprocesamiento(self):
 		#ICA: reparación de artefactos EOG y ECG 
 		ica = mne.preprocessing.ICA(n_components=20, random_state=97, max_iter=800)
@@ -81,7 +84,8 @@ class BdfA(object):
 		# https://mne.tools/stable/auto_tutorials/intro/plot_20_events_from_raw.html#sphx-glr-auto-tutorials-intro-plot-20-events-from-raw-py
 		# Un canal de estímulo (abreviatura de "canal de estímulo") es un canal que no recibe señales de un EEG, MEG u otro sensor. En cambio, los canales STIM registran voltajes
 		self.raw.copy().pick_types(meg=False, stim=True).plot(start=3, duration=6)
-		self.raw.plot_psd(fmax=120);
+		# self.raw.plot_psd(fmax=120);
+		self.raw.plot_psd(fmax=50);
 		# Conversión de una señal de canal STIM en una matriz de eventos 
 		# Si sus datos tienen eventos registrados en un canal STIM, puede convertirlos en una matriz de eventos usando mne.find_events().
 		events = mne.find_events(self.raw, stim_channel='Status')
@@ -112,7 +116,8 @@ class BdfA(object):
 		fig.subplots_adjust(right=0.7)
 		# # Trazar eventos y datos brutos juntos
 		self.raw.plot(events=events, start=5, duration=10, color='gray',event_color={1: 'r'})
-		self.raw.plot_psd(fmax=120);
+		# self.raw.plot_psd(fmax=120);
+		self.raw.plot_psd(fmax=50);
 		# # Hacer matrices de eventos igualmente espaciadas
 		new_events = mne.make_fixed_length_events(self.raw, start=5, stop=50, duration=2)
 	def plots(self):
@@ -122,7 +127,8 @@ class BdfA(object):
 		self.raw.plot_psd(average=True)
 		# # Si los datos se han filtrado, las líneas discontinuas verticales indicarán automáticamente los límites del filtro.
 		# # aquí hay un gráfico de unos pocos sensores
-		midline = ['Fp1', 'F7', 'FC1', 'T7', 'C3', 'CP1']
+		# midline = ['Fp1', 'F7', 'FC1', 'T7', 'C3', 'CP1'] 'MEG 0113', 'MEG 0112', 'MEG 0111', 'MEG 0122', 'MEG 0123', 'MEG 0121'
+		midline = ['MEG 0113', 'MEG 0112', 'MEG 0111', 'MEG 0122', 'MEG 0123', 'MEG 0121'] 
 		self.raw.plot_psd(picks=midline)
 		# # Alternativamente, puede trazar el PSD para cada sensor en sus propios ejes
 		# self.raw.plot_psd_topo() #RuntimeError: No digitization points found. no esta EEG por defecto
@@ -158,10 +164,33 @@ class BdfA(object):
 		# # Reparación de artefactos filtrando
 		# # Derivas lentas 
 		mag_channels = mne.pick_types(self.raw.info, meg='mag', eeg=True)
-		raw.plot(order=mag_channels, proj=False,n_channels=len(mag_channels), remove_dc=False)
+		self.raw.plot(order=mag_channels, proj=False,n_channels=len(mag_channels), remove_dc=False)
 		for cutoff in (0.1, 0.2):
-			raw_highpass = raw.copy().filter(l_freq=cutoff, h_freq=None)
+			raw_highpass = self.raw.copy().filter(l_freq=cutoff, h_freq=None)
 			fig = raw_highpass.plot(order=mag_channels, proj=False,n_channels=len(mag_channels), remove_dc=False)
 			fig.subplots_adjust(top=0.9)#opcional
 			fig.suptitle('High-pass filtered at {} Hz'.format(cutoff), size='xx-large',weight='bold')
-			raw_highpass.plot_psd(fmax=120);
+			# raw_highpass.plot_psd(fmax=120);
+			# raw_highpass.plot_psd(fmax=50);
+		filter_params = mne.filter.create_filter(self.raw.get_data(), self.raw.info['sfreq'],l_freq=0.2, h_freq=None)
+		mne.viz.plot_filter(filter_params, self.raw.info['sfreq'], flim=(0.01, 5))
+		def add_arrows(axes):
+		    # add some arrows at 60 Hz and its harmonics
+		    for ax in axes:
+		        freqs = ax.lines[-1].get_xdata()
+		        psds = ax.lines[-1].get_ydata()
+		        for freq in (40,50):
+		            idx = np.searchsorted(freqs, freq)
+		            # get ymax of a small region around the freq. of interest
+		            y = psds[(idx - 4):(idx + 5)].max()
+		            ax.arrow(x=freqs[idx], y=y + 18, dx=0, dy=-12, color='red',width=0.1, head_width=3, length_includes_head=True)
+		fig = self.raw.plot_psd(fmax=50, average=True)
+		add_arrows(fig.axes[:2])
+		meg_picks = mne.pick_types(self.raw.info)  # meg=True, eeg=False are the defaults
+		freqs = (60, 120, 180, 240)
+		raw_notch = self.raw.copy().notch_filter(freqs=freqs, picks=meg_picks)
+		for title, data in zip(['Un', 'Notch '], [self.raw, raw_notch]):
+		    fig = data.plot_psd(fmax=50, average=True)
+		    fig.subplots_adjust(top=0.85)
+		    fig.suptitle('{}filtered'.format(title), size='xx-large', weight='bold')
+		    add_arrows(fig.axes[:2])

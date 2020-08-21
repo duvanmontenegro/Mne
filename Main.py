@@ -1,9 +1,15 @@
 from bdfv4 import BdfA
 import numpy as np
-# # Lectura de datos en bruto
-ob=BdfA('../s01.bdf')
+import mne
+import os
+# # Lectura de datos del tutorial
+sample_data_folder = mne.datasets.sample.data_path()
+sample_data_raw_file = os.path.join(sample_data_folder, 'MEG', 'sample','sample_audvis_filt-0-40_raw.fif')
+ob=BdfA(sample_data_raw_file)
+# # Lectura de datos en bruto del Dataset DEAP
+# ob=BdfA('../s01.bdf')
 # # La estructura de datos de información
-# ob.infor()
+ob.infor()
 # # Descripción general del análisis MEG / EEG con MNE-Python
 # ob.canalizacionbasica()
 # ob.preprocesamiento()
