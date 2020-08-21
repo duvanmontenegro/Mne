@@ -1,8 +1,8 @@
 # Mne
 Códigos de mne para archivos bdf 
 ## Instalación
+**Comandos importantes (Nos crea un entorno en conda con todo lo necesario): **
 https://mne.tools/dev/install/contributing.html
-Comandos importantes (Nos crea un entorno en conda con todo lo necesario):
 ```
 curl --remote-name https://raw.githubusercontent.com/mne-tools/mne-python/master/environment.yml
 conda env create --file environment.yml --name mnedev
@@ -15,60 +15,75 @@ pip install mne
 conda activate mnedev
 ```
 ## Código funcional de pruebas:
-Este código fue tomado de la página: https://mne.tools/stable/auto_tutorials/intro/plot_10_overview.html#sphx-glr-auto-tutorials-intro-plot-10-overview-py y se realizan modificaciones para trabajar con el dataset “DEAP”
+**Este código fue tomado de la página: https://mne.tools/stable/auto_tutorials/intro/plot_10_overview.html#sphx-glr-auto-tutorials-intro-plot-10-overview-py y se realizan modificaciones para trabajar con el dataset “DEAP”**
  
-Comenzamos importando los módulos Python necesarios:
+_**Comenzamos importando los módulos Python necesarios:**_
+```
 import numpy as np
 import mne
-
-Cargando datos: al tratarse de archivos bdf se utilizará la siguiente línea:
+```
+_**Cargando datos: al tratarse de archivos bdf se utilizará la siguiente línea:**_
+```
 raw = mne.io.read_raw_bdf("s01.bdf", preload=True)
-"s01.bdf": es la ruta y nombre del archivo.
-preload=True: este atributo permite que precargue datos en la memoria para manipulación de datos e indexación más rápida, lo cual nos puede evitar errores como: “No se encontraron puntos de digitalización.”
+```
+_"s01.bdf": es la ruta y nombre del archivo._
+_preload=True: este atributo permite que precargue datos en la memoria para manipulación de datos e indexación más rápida, lo cual nos puede evitar errores como: “No se encontraron puntos de digitalización.”_
 
-Para obtener información sobre el archivo el cual se está trabajando podemos usar las siguientes líneas de trabajo:
+_**Para obtener información sobre el archivo el cual se está trabajando podemos usar las siguientes líneas de trabajo:**_
+```
 print(raw)
 print(raw.info)
 print("Canales1: ",raw.ch_names) - ch_names: permite ver todos los canales
-
-Para obtener índices de los canales
+```
+_**Para obtener índices de los canales**_
+```
 print(mne.pick_channels(raw.ch_names, include=['Fp1', 'AF3']))  : solo esos dos
 print(mne.pick_channels(raw.ch_names, include=[],exclude=['Fp1', 'AF3'])) : todos menos los dos
 Para obtener todos y solo los índices de canales EEG (incluidos los canales EEG "malos")
 print(mne.pick_types(raw.info, meg=False, eeg=True, exclude=[]))
-
-Para saber el tipo de canal en específico:
+```
+_**Para saber el tipo de canal en específico:**_
+```
 print(mne.channel_type(raw.info, 0))
 picks = (25, 76, 77, 319)
 print([mne.channel_type(info, x) for x in picks])
 print(raw.get_channel_types(picks=picks))
-https://mne.tools/stable/auto_tutorials/intro/plot_30_info.html#tut-info-class
+```
+_https://mne.tools/stable/auto_tutorials/intro/plot_30_info.html#tut-info-class_
 
-Para graficar: Tomamos de ejemplo dos importantes:
-Gráfico de las trazas de sensor sin procesar medida en el tiempo:
+_**Para graficar: Tomamos de ejemplo dos importantes:**_
+_Gráfico de las trazas de sensor sin procesar medida en el tiempo:_
+```
 raw.plot(start=12, duration=4,title="Plot Uno");
-La densidad espectral de potencia (PSD): 
-“Las características PSD son probablemente las características más utilizadas para BCI, y han demostrado ser eficaces para el reconocimiento de un gran número de señales neurofisiológicas.”
+```
+**La densidad espectral de potencia (PSD):_“Las características PSD son probablemente las características más utilizadas para BCI, y han demostrado ser eficaces para el reconocimiento de un gran número de señales neurofisiológicas.”_**
+```
 raw.plot_psd(fmax=120);
-fmax=120: Esta frecuencia se toma del filtro pasa baja de nuestro archivo: lowpass: 104.0 Hz y no puede ser mayor a la mitad de la frecuencia general
-“Código para crear una lista de los canales de las señales y mostrar esta lista”
+```
+_fmax=120: Esta frecuencia se toma del filtro pasa baja de nuestro archivo: lowpass: 104.0 Hz y no puede ser mayor a la mitad de la frecuencia general
+“Código para crear una lista de los canales de las señales y mostrar esta lista”_
+```
 chs = raw.ch_names
 chan_idxs = [raw.ch_names.index(ch) for ch in chs]
 raw.plot(order=chan_idxs, start=12, duration=4,title="Plot Uno");
 raw.plot_psd(fmax=120); 
-
-Preprocesamiento
-Filtrado:
-Derivas lentas: cuando la señal es de alta frecuencia y está montada en una señal de baja frecuencia, las señales rápidas pueden mantenerse iguales pero la señal de baja frecuencia en la que está montada puede tener una deriva (aumenta o disminuye).
-Esta parte del código nos permitirá hacer que las desviaciones lentas sean más visibles.
+```
+## Preprocesamiento
+**Filtrado:**
+**Derivas lentas: _cuando la señal es de alta frecuencia y está montada en una señal de baja frecuencia, las señales rápidas pueden mantenerse iguales pero la señal de baja frecuencia en la que está montada puede tener una deriva (aumenta o disminuye)._**
+_Esta parte del código nos permitirá hacer que las desviaciones lentas sean más visibles._
+```
 mag_channels = mne.pick_types(raw.info, meg='mag', eeg=True)
 raw.plot(order=mag_channels, proj=False,n_channels=len(mag_channels), remove_dc=False)
-raw.plot_psd(fmax=120);
-Para el filtro pasa altas utilizaremos 3Hz
+#raw.plot_psd(fmax=120);
+```
+_Para el filtro pasa altas utilizaremos 3Hz_
+```
 raw_highpass = raw.copy().filter(l_freq=3, h_freq=None) # trabajamos sobre una copia del objeto
 fig = raw_highpass.plot(order=mag_channels, proj=False,n_channels=len(mag_channels), remove_dc=False)
 fig.subplots_adjust(top=0.9)#opcional
 fig.suptitle('High-pass filtered at {} Hz'.format(3), size='xx-large',weight='bold')
+```
 Para crear o utilizar los diferentes tipos de filtros solo tenemos que tener en cuenta que: l_freqy h_freqson las frecuencias por debajo y por encima de las cuales, respectivamente, filtrar los datos. Así los usos son:
 l_freq < h_freq: filtro de paso de banda
 l_freq > h_freq: filtro de parada de banda
