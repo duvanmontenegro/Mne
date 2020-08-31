@@ -3,13 +3,13 @@ import numpy as np
 import mne
 import os
 # # Lectura de datos del tutorial
-sample_data_folder = mne.datasets.sample.data_path()
-sample_data_raw_file = os.path.join(sample_data_folder, 'MEG', 'sample','sample_audvis_filt-0-40_raw.fif')
-ob=BdfA(sample_data_raw_file)
+# sample_data_folder = mne.datasets.sample.data_path()
+# sample_data_raw_file = os.path.join(sample_data_folder, 'MEG', 'sample','sample_audvis_filt-0-40_raw.fif')
+# ob=BdfA(sample_data_raw_file)
 # # Lectura de datos en bruto del Dataset DEAP
-# ob=BdfA('../s01.bdf')
+ob=BdfA('../s01.bdf')
 # # La estructura de datos de información
-ob.infor()
+# ob.infor()
 # # Descripción general del análisis MEG / EEG con MNE-Python
 # ob.canalizacionbasica()
 # ob.preprocesamiento()
@@ -36,3 +36,8 @@ ob.infor()
 # # Filtrado y remuestreo de datos
 # https://mne.tools/stable/auto_tutorials/preprocessing/plot_30_filtering_resampling.html#sphx-glr-auto-tutorials-preprocessing-plot-30-filtering-resampling-py
 # ob.filtradore()
+# # Clasificación de la etapa del sueño a partir de datos de polisomnografía (PSG)
+# # Este primero es con Archivo de la guia
+# ob.clasificacionP()
+# # Clasificacion 
+ob.clasificacion()
