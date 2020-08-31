@@ -38,6 +38,6 @@ ob=BdfA('../s01.bdf')
 # ob.filtradore()
 # # Clasificación de la etapa del sueño a partir de datos de polisomnografía (PSG)
 # # Este primero es con Archivo de la guia
-# ob.clasificacionP()
+ob.clasificacionP()
 # # Clasificacion 
-ob.clasificacion()
+# ob.clasificacion()

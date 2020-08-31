@@ -7,11 +7,11 @@ class BdfA(object):
 		self.raw = None
 		self.iniciar()
 	def iniciar(self):
-		print("Iniciar")
 		self.raw = mne.io.read_raw_bdf(self.url, preload=True)
 		# self.raw = mne.io.read_raw_fif(self.url)
 		self.raw.crop(0, 60).load_data()
 		# print("Canales1: ",self.raw.ch_names)
+		print("Ok crop(0, 60)")
 	def infor(self):
 		# # https://mne.tools/stable/auto_tutorials/intro/plot_30_info.html#sphx-glr-auto-tutorials-intro-plot-30-info-py
 		print(self.raw.info)
@@ -208,13 +208,26 @@ class BdfA(object):
 		mapping = {'EOG horizontal': 'eog', 'Resp oro-nasal': 'misc', 'EMG submental': 'misc', 'Temp rectal': 'misc', 'Event marker': 'misc'}
 		print(alice_files[0])
 		print(alice_files[1]) # ver que trae¿?
+		print(bob_files[0])
+		print(bob_files[1]) # ver que trae¿?
+		# # -Hypnogram.edfque contiene las anotaciones registradas por un experto.
 		# exit()
 		raw_train = mne.io.read_raw_edf(alice_files[0])
+		print("raw_train.info")
+		print()
 		print(raw_train.info)
+		raw_train.plot(duration=60, scalings='auto')
+		# # Las anotaciones se agregan a la instancia de mne.io.Rawcomo atributo raw.annotations.
 		annot_train = mne.read_annotations(alice_files[1])
+		print("annot_train")
+		print()
+		print(annot_train)
+		print()
 		raw_train.set_annotations(annot_train, emit_warning=False)
 		# # Defina el tipo de sensor de canales.
 		raw_train.set_channel_types(mapping)
+		print("2:raw_train.info")
+		print()
 		print(raw_train.info)
 		# exit()
 		# plot some data
@@ -222,6 +235,8 @@ class BdfA(object):
 		# # Extraer eventos de 30 segundos de anotaciones
 		annotation_desc_2_event_id = {'Sleep stage W': 1, 'Sleep stage 1': 2, 'Sleep stage 2': 3, 'Sleep stage 3': 4, 'Sleep stage 4': 4, 'Sleep stage R': 5}
 		events_train, _ = mne.events_from_annotations(raw_train, event_id=annotation_desc_2_event_id, chunk_duration=30.)
+		print("events_train")
+		print(events_train)
 		# create a new event_id that unifies stages 3 and 4
 		event_id = {'Sleep stage W': 1, 'Sleep stage 1': 2, 'Sleep stage 2': 3, 'Sleep stage 3/4': 4, 'Sleep stage R': 5}
 		# plot events
@@ -229,9 +244,12 @@ class BdfA(object):
 		# exit()
 		# keep the color-code for further plotting
 		stage_colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
+		print("stage_colors")
 		print(stage_colors)
+		print(len(stage_colors))
 		# # Cree épocas a partir de los datos en función de los eventos que se encuentran en las anotaciones 
 		tmax = 30. - 1. / raw_train.info['sfreq']  # tmax in included
+		print(tmax)
 		epochs_train = mne.Epochs(raw=raw_train, events=events_train, event_id=event_id, tmin=0., tmax=tmax, baseline=None)
 		print(epochs_train)
 		# exit()
@@ -245,6 +263,7 @@ class BdfA(object):
 		events_test, _ = mne.events_from_annotations( raw_test, event_id=annotation_desc_2_event_id, chunk_duration=30.)
 		epochs_test = mne.Epochs(raw=raw_test, events=events_test, event_id=event_id, tmin=0., tmax=tmax, baseline=None)
 		print(epochs_test)
+		print("END BOB")
 		# exit()
 
 		# # Ingeniería de funciones
@@ -253,6 +272,9 @@ class BdfA(object):
 		fig, (ax1, ax2) = plt.subplots(ncols=2)
 		# iterate over the subjects
 		stages = sorted(event_id.keys())
+		print("stages")
+		print(stages)
+		print()
 		for ax, title, epochs in zip([ax1, ax2], ['Alice', 'Bob'], [epochs_train, epochs_test]):
 			for stage, color in zip(stages, stage_colors):
 				epochs[stage].plot_psd(area_mode=None, color=color, ax=ax, fmin=0.1, fmax=20., show=False, average=True, spatial_colors=False)
