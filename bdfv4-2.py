@@ -11,7 +11,7 @@ class BdfA(object):
 		# self.raw = mne.io.read_raw_fif(self.url)
 		# self.raw.crop(0, 60).load_data()
 		# print("Canales1: ",self.raw.ch_names)
-		# print("Ok crop(0, 60)")
+		print("Ok crop(0, 60)")
 	def infor(self):
 		# # https://mne.tools/stable/auto_tutorials/intro/plot_30_info.html#sphx-glr-auto-tutorials-intro-plot-30-info-py
 		print(self.raw.info)
@@ -126,8 +126,8 @@ class BdfA(object):
 		self.raw.plot_psd(average=True)
 		# # Si los datos se han filtrado, las líneas discontinuas verticales indicarán automáticamente los límites del filtro.
 		# # aquí hay un gráfico de unos pocos sensores
-		midline = ['Fp1', 'F7', 'FC1', 'T7', 'C3', 'CP1'] # 'MEG 0113', 'MEG 0112', 'MEG 0111', 'MEG 0122', 'MEG 0123', 'MEG 0121'
-		# midline = ['MEG 0113', 'MEG 0112', 'MEG 0111', 'MEG 0122', 'MEG 0123', 'MEG 0121'] 
+		# midline = ['Fp1', 'F7', 'FC1', 'T7', 'C3', 'CP1'] 'MEG 0113', 'MEG 0112', 'MEG 0111', 'MEG 0122', 'MEG 0123', 'MEG 0121'
+		midline = ['MEG 0113', 'MEG 0112', 'MEG 0111', 'MEG 0122', 'MEG 0123', 'MEG 0121'] 
 		self.raw.plot_psd(picks=midline)
 		# # Alternativamente, puede trazar el PSD para cada sensor en sus propios ejes
 		# self.raw.plot_psd_topo() #RuntimeError: No digitization points found. no esta EEG por defecto

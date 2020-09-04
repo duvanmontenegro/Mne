@@ -29,7 +29,7 @@ ob=BdfA('../s01.bdf')
 # https://mne.tools/stable/auto_tutorials/raw/plot_20_event_arrays.html#sphx-glr-auto-tutorials-raw-plot-20-event-arrays-py
 # ob.teventos()
 # # Métodos de trazado integrados para objetos Raw
-# ob.plots()
+ob.plots()
 # # Descripción general de la detección de artefactos
 # https://mne.tools/stable/auto_tutorials/preprocessing/plot_10_preprocessing_overview.html#sphx-glr-auto-tutorials-preprocessing-plot-10-preprocessing-overview-py
 # ob.artefactos()
@@ -38,6 +38,6 @@ ob=BdfA('../s01.bdf')
 # ob.filtradore()
 # # Clasificación de la etapa del sueño a partir de datos de polisomnografía (PSG)
 # # Este primero es con Archivo de la guia
-ob.clasificacionP()
+# ob.clasificacionP()
 # # Clasificacion 
 # ob.clasificacion()
