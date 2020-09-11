@@ -216,7 +216,13 @@ class BdfA(object):
 		print("raw_train.info")
 		print()
 		print(raw_train.info)
+		print(raw_train.ch_names)
 		raw_train.plot(duration=60, scalings='auto')
+		# # No se puede porque no existe el canal stim
+		# raw_train.copy().pick_types(stim=True).plot(start=3, duration=6)
+		# events = mne.find_events(raw_train, stim_channel='Status')
+		# print(events[:5])
+		# fig = mne.viz.plot_events(events, sfreq=raw_train.info['sfreq'],first_samp=raw_train.first_samp)
 		# # Las anotaciones se agregan a la instancia de mne.io.Rawcomo atributo raw.annotations.
 		annot_train = mne.read_annotations(alice_files[1])
 		print("annot_train")
@@ -251,6 +257,7 @@ class BdfA(object):
 		tmax = 30. - 1. / raw_train.info['sfreq']  # tmax in included
 		print(tmax)
 		epochs_train = mne.Epochs(raw=raw_train, events=events_train, event_id=event_id, tmin=0., tmax=tmax, baseline=None)
+		# epochs_train.plot()
 		print(epochs_train)
 		# exit()
 
@@ -270,6 +277,8 @@ class BdfA(object):
 		# visualize Alice vs. Bob PSD by sleep stage.
 		print("ALICE VS. BOB")
 		fig, (ax1, ax2) = plt.subplots(ncols=2)
+		print("ax1")
+		print(ax1)
 		# iterate over the subjects
 		stages = sorted(event_id.keys())
 		print("stages")
@@ -282,7 +291,7 @@ class BdfA(object):
 		ax2.set(ylabel='µV^2/Hz (dB)')
 		ax2.legend(ax2.lines[2::3], stages)
 		plt.show()
-		exit()
+		# exit()
 
 		# # Diseñar un transformador scikit-learn a partir de una función de Python
 		print("Scikit-learn")
@@ -297,6 +306,7 @@ class BdfA(object):
 				X.append(psds_band.reshape(len(psds), -1))
 			return np.concatenate(X, axis=1)
 		# # Flujo de trabajo de clasificación multiclase usando scikit-learn
+		exit()
 		pipe = make_pipeline(FunctionTransformer(eeg_power_band, validate=False), RandomForestClassifier(n_estimators=100, random_state=42))
 		
 		# Train
